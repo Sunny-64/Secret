@@ -5,7 +5,6 @@ const mongoose = require("mongoose");
 const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
-const flash = require("express-flash");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreate = require('mongoose-findorcreate')
 const path = require("path");
@@ -15,8 +14,8 @@ const app = express();
 app.use(express.static(path.join(__dirname + "/public")));
 
 app.set("view engine", "ejs");
+app.set('views', __dirname + '/views');
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(flash());
 
 app.use(
   session({
@@ -91,7 +90,7 @@ passport.use(
 
 // Routes
 app.get("/", (req, res) => {
-  res.render("home.ejs");
+  res.render("home");
 });
 
 app.get('/auth/google',
