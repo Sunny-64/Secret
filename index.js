@@ -8,9 +8,12 @@ const passportLocalMongoose = require("passport-local-mongoose");
 const flash = require("express-flash");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const findOrCreate = require('mongoose-findorcreate')
+const path = require("path");
 
 const app = express();
-app.use(express.static(__dirname + "/public"));
+// console.log(path.join(__dirname + "/public"))
+app.use(express.static(path.join(__dirname + "/public")));
+
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(flash());
