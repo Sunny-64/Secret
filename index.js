@@ -193,9 +193,6 @@ app.get("/logout", (req, res) => {
   });
 });
 
-app.listen(3000, function () {
-  console.log("Server running at PORT : 3000");
-});
 
 
 // SUPER SECRET ROUTE
@@ -220,3 +217,8 @@ app.post("/password", (req, res)=>{
     res.redirect("/password");
   }
 })
+
+
+app.listen(3000, function () {
+  console.log("Server running at PORT : 3000");
+});
