@@ -80,7 +80,7 @@ passport.use(
   new GoogleStrategy({
       clientID: process.env.CLIENT_ID,
       clientSecret: process.env.CLIENT_SECRET,
-      callbackURL: "https://secret-chi.vercel.app/auth/google/secrets",
+      callbackURL: "http://localhost:3000/auth/google/secrets",
     },
     function (accessToken, refreshToken, profile, cb) {
       User.findOrCreate({ username: profile.displayName, googleId: profile.id }, function (err, user) {
