@@ -6,11 +6,11 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const FacebookStrategy = require("passport-facebook");
 const findOrCreate = require('mongoose-findorcreate')
 const path = require("path");
 
 const app = express();
-// console.log(path.join(__dirname + "/public"))
 app.use(express.static(path.join(__dirname + "/public")));
 
 app.set("view engine", "ejs");
@@ -44,7 +44,8 @@ mongoose
 const userModal = new mongoose.Schema({
   username: { type: String },
   password: { type: String },
-  googleId : {type : String}
+  googleId : {type : String}, 
+  facebookId : {type : String}
 });
 
 const secretsModel = new mongoose.Schema({
@@ -88,11 +89,26 @@ passport.use(
     })
 );
 
+
+passport.use(new FacebookStrategy({
+  clientID: process.env.FACEBOOK_APP_ID,
+  clientSecret: process.env.FACEBOOK_APP_SECRET,
+  callbackURL: "https://secret-chi.vercel.app/auth/facebook/secrets"
+},
+function(accessToken, refreshToken, profile, cb) {
+  User.findOrCreate({username : profile.displayName, facebookId: profile.id }, function (err, user) {
+    return cb(err, user);
+  });
+}
+));
+
+
 // Routes
 app.get("/", (req, res) => {
   res.render("home");
 });
 
+// Google Authentication 
 app.get('/auth/google',
   passport.authenticate('google', { scope: ['profile'] }));
 
@@ -103,6 +119,21 @@ app.get('/auth/google/secrets',
     res.redirect('/secrets');
 });
 
+
+// Facebook Authentication 
+
+app.get('/auth/facebook',
+  passport.authenticate('facebook'));
+
+app.get('/auth/facebook/secrets',
+  passport.authenticate('facebook', { failureRedirect: '/login' }),
+  function(req, res) {
+    // Successful authentication, redirect home.
+    res.redirect('/secrets');
+  });
+
+
+// Routes
 app.get("/register", (req, res) => {
   res.render("register");
 });
@@ -171,9 +202,6 @@ app.post("/login", (req, res) => {
     username: req.body.username,
     password: req.body.password,
   });
-
-
-
   req.login(user, (err) => {
     if (err) {
       res.redirect("register");
@@ -212,7 +240,8 @@ app.get("/password", (req,res)=>{
 
 app.post("/password", (req, res)=>{
   if(process.env.SUPER_SECRET_PASSWORD === req.body.superPassword){
-    req.session.authorizedUser = true;
+    
+    // req.session.authorizedUser = true;
     res.render("superSecret", {content : process.env.SUPER_SECRET_MESSAGE});
   }
   else{
