@@ -6,7 +6,7 @@ const session = require("express-session");
 const passport = require("passport");
 const passportLocalMongoose = require("passport-local-mongoose");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
-const FacebookStrategy = require("passport-facebook");
+// const FacebookStrategy = require("passport-facebook");
 const findOrCreate = require('mongoose-findorcreate')
 const path = require("path");
 
@@ -90,17 +90,17 @@ passport.use(
 );
 
 
-passport.use(new FacebookStrategy({
-  clientID: process.env.FACEBOOK_APP_ID,
-  clientSecret: process.env.FACEBOOK_APP_SECRET,
-  callbackURL: "https://secret-chi.vercel.app/auth/facebook/secrets"
-},
-function(accessToken, refreshToken, profile, cb) {
-  User.findOrCreate({username : profile.displayName, facebookId: profile.id }, function (err, user) {
-    return cb(err, user);
-  });
-}
-));
+// passport.use(new FacebookStrategy({
+//   clientID: process.env.FACEBOOK_APP_ID,
+//   clientSecret: process.env.FACEBOOK_APP_SECRET,
+//   callbackURL: "https://secret-chi.vercel.app/auth/facebook/secrets"
+// },
+// function(accessToken, refreshToken, profile, cb) {
+//   User.findOrCreate({username : profile.displayName, facebookId: profile.id }, function (err, user) {
+//     return cb(err, user);
+//   });
+// }
+// ));
 
 
 // Routes
@@ -122,15 +122,15 @@ app.get('/auth/google/secrets',
 
 // Facebook Authentication 
 
-app.get('/auth/facebook',
-  passport.authenticate('facebook'));
+// app.get('/auth/facebook',
+//   passport.authenticate('facebook'));
 
-app.get('/auth/facebook/secrets',
-  passport.authenticate('facebook', { failureRedirect: '/login' }),
-  function(req, res) {
-    // Successful authentication, redirect home.
-    res.redirect('/secrets');
-  });
+// app.get('/auth/facebook/secrets',
+//   passport.authenticate('facebook', { failureRedirect: '/login' }),
+//   function(req, res) {
+//     // Successful authentication, redirect home.
+//     res.redirect('/secrets');
+//   });
 
 
 // Routes
