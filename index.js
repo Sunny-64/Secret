@@ -94,8 +94,10 @@ passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_APP_ID,
   clientSecret: process.env.FACEBOOK_APP_SECRET,
   callbackURL: "https://secret-chi.vercel.app/auth/facebook/secrets"
+  // callbackURL: "localhost:3000/auth/facebook/secrets"
 },
 function(accessToken, refreshToken, profile, cb) {
+  console.log(profile);
   User.findOrCreate({username : profile.displayName, facebookId: profile.id }, function (err, user) {
     return cb(err, user);
   });
