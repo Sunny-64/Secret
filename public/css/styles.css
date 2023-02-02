@@ -10,10 +10,7 @@ body {
 }
 
 .centered {
-    /* width: 100%; */
     height: 100vh;
-    /* padding-top: 200px; */
-    /* text-align: center; */
     display: flex;
     flex-direction: column;
     justify-content: center;
